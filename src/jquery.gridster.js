@@ -19,6 +19,7 @@
         min_rows: 15,
         max_size_x: false,
         autogrow_cols: false,
+        free_x_placement: true,
         autogenerate_stylesheet: true,
         avoid_overlapped_widgets: true,
         serialize_params: function($w, wgd) {
@@ -1327,6 +1328,7 @@
         if (!this.colliders_data.length) {
             return this;
         }
+
         var rows = this.get_targeted_rows(this.colliders_data[0].el.data.row);
         var last_n_rows = this.last_rows.length;
         var n_rows = rows.length;
@@ -1359,12 +1361,16 @@
     */
     fn.set_player = function(col, row, no_player) {
         var self = this;
+
+        console.log(!no_player);
+
         if (!no_player) {
             this.empty_cells_player_occupies();
         }
-        var cell = !no_player ? self.colliders_data[0].el.data : {col: col};
+
+        var cell = !no_player ? self.colliders_data[0].el.data : {col: col, row: row};
         var to_col = cell.col;
-        var to_row = row || cell.row;
+        var to_row = cell.row;
 
         this.player_grid_data = {
             col: to_col,
@@ -1837,6 +1843,10 @@
         });
 
         if (!result) { return false; }
+
+        if (this.options.free_x_placement) {
+            min_row = widget_grid_data.row;
+        }
 
         return this.get_valid_rows(widget_grid_data, upper_rows, min_row);
     };
