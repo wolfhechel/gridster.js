@@ -218,10 +218,11 @@
     * @param {Number} [row] The row the widget should start in.
     * @param {Array} [max_size] max_size Maximun size (in units) for width and height.
     * @param {Array} [min_size] min_size Minimum size (in units) for width and height.
+    * @param {Function} [callback] Function executed when the widget has been added.
     * @return {HTMLElement} Returns the jQuery wrapped HTMLElement representing.
     *  the widget that was just created.
     */
-    fn.add_widget = function(html, size_x, size_y, col, row, max_size, min_size) {
+    fn.add_widget = function(html, size_x, size_y, col, row, max_size, min_size, callback) {
         var pos;
         size_x || (size_x = 1);
         size_y || (size_y = 1);
@@ -263,6 +264,10 @@
         this.set_dom_grid_height();
 
         this.drag_api.set_limits(this.cols * this.min_widget_width);
+
+        if (callback) {
+            callback.call(this);
+        }
 
         return $w.fadeIn();
     };
@@ -1361,8 +1366,6 @@
     */
     fn.set_player = function(col, row, no_player) {
         var self = this;
-
-        console.log(!no_player);
 
         if (!no_player) {
             this.empty_cells_player_occupies();
